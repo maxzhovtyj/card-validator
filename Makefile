@@ -17,6 +17,6 @@ test-api:
 
 start:
 	docker build -t card-validator .
-	docker stop validator
-	docker rm validator
+	docker stop validator || true
+	docker rm validator || true
 	docker run --name validator -d -p 7799:7799 card-validator
