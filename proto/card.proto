@@ -1,0 +1,22 @@
+syntax = "proto3";
+option go_package = "./proto";
+
+service CardService {
+  rpc Validate(ValidateCardRequest) returns (ValidateCardResponse);
+}
+
+message ValidateCardRequest {
+  string number = 1;
+  int64 expirationYear = 2;
+  string expirationMonth = 3;
+}
+
+message Error {
+  string code = 1;
+  string message = 2;
+}
+
+message ValidateCardResponse {
+  bool valid = 1;
+  optional Error error = 2;
+}
