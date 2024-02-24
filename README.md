@@ -6,7 +6,6 @@
 
 Run grpc server in docker
 
-* build an image
 ```shell
 make start 
 ```
