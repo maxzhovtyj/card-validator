@@ -1,34 +1,40 @@
-Потрібно розробити апі сервіс який буде перевіряти картки на валідність.
+### Card-Validator by Maksym Zhovtaniuk
 
-Приклад валідної картки:
-```
-Card number: 4111111111111111
-Expiration month: 12
-Expiration year: 2028
-```
+---
 
-Приклади невалідних карток:
-```
-Card number: 4111111111111111
-Expiration month: 01
-Expiration year: 2021
-```
-або
-```
-Card number: 1111111111111
-Expiration month: 10
-Expiration year: 2028
+#### In case of any questions tg: @maxzhovtyj
+
+Run grpc server in docker
+
+* build an image
+```shell
+docker build -t card-validator . 
 ```
 
-Валідувати необхідно всі три поля які будуть приходити в сервіс. Сервіс повинен видавати результат в вигляді:
-- valid: true/false
-- error optional:
-    - code: 001
-    - message: some message
+* run container
+```shell
+docker run --name validator -d -p 7799:7799 card-validator
+```
 
-Для апі можна використовувати будь який тип архітектури апі:
-- REST
-- Json rpc
-- gRPC
 
-Сервіс повинен запускатись в Docker та бути викладеним в github.
+### Test API:
+
+---
+
+grpc_cli:
+```shell
+grpc_cli call 127.0.0.1:7799 Validate 'card: {number: "1111" expirationYear: 2023 expirationMonth: "12"}'
+```
+
+#### OR
+
+grpcurl
+```shell
+grpcurl -plaintext -d '{"card": {"number": "1111", "expirationYear": 2023, "expirationMonth": "12"}}' 127.0.0.1:7799 CardService/Validate
+```
+
+#### OR
+```shell
+make test-api
+```
+or use `cmd/client/main.go` file
