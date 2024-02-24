@@ -55,7 +55,7 @@ func (v *validator) Valid(card Card) error {
 
 	if card.GetExpirationYear() < int64(currTime.Year()) {
 		return ErrCardExpired
-	} else if card.GetExpirationYear() == int64(currTime.Year()) && month > currTime.Month() {
+	} else if card.GetExpirationYear() == int64(currTime.Year()) && month < currTime.Month() {
 		return ErrCardExpired
 	}
 
