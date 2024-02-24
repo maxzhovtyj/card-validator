@@ -14,3 +14,9 @@ deploy-card-validator: card-validator-linux
 
 test-api:
 	go run ./cmd/client/main.go
+
+start:
+	docker build -t card-validator .
+	docker stop validator
+	docker rm validator
+	docker run --name validator -d -p 7799:7799 card-validator

@@ -2,14 +2,13 @@ package card
 
 import (
 	"testing"
-	"time"
 )
 
 var _ Card = (*card)(nil)
 
 type card struct {
 	number          string
-	expirationMonth time.Month
+	expirationMonth string
 	expirationYear  int64
 }
 
@@ -17,7 +16,7 @@ func (c *card) GetNumber() string {
 	return c.number
 }
 func (c *card) GetExpirationMonth() string {
-	return c.expirationMonth.String()
+	return c.expirationMonth
 }
 func (c *card) GetExpirationYear() int64 {
 	return c.expirationYear
@@ -27,14 +26,15 @@ func TestValid(t *testing.T) {
 	testTable := []struct {
 		name            string
 		number          string
-		expirationMonth time.Month
+		expirationMonth string
 		expirationYear  int64
 		valid           bool
 	}{
-		{"valid", "4111111111111111", time.December, 2028, true},
-		{"invalid", "4111111111111111", time.January, 2021, false},
-		{"invalid1", "1111111111111", time.October, 2028, false},
-		{"invalid2", "411111ABC1111111", time.October, 2028, false},
+		{"valid", "4111111111111111", "12", 2028, true},
+		{"valid", "4111111111111111", "12", 2024, true},
+		{"invalid", "4111111111111111", "12", 2021, false},
+		{"invalid1", "1111111111111", "12", 2028, false},
+		{"invalid2", "411111ABC1111111", "12", 2028, false},
 	}
 
 	for _, testCase := range testTable {

@@ -8,14 +8,8 @@ Run grpc server in docker
 
 * build an image
 ```shell
-docker build -t card-validator . 
+make start 
 ```
-
-* run container
-```shell
-docker run --name validator -d -p 7799:7799 card-validator
-```
-
 
 ### Test API:
 
