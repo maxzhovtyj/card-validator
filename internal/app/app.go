@@ -5,6 +5,7 @@ import (
 	"github.com/maxzhovtyj/card-validator/internal/config"
 	"github.com/maxzhovtyj/card-validator/internal/handler/handler"
 	"github.com/maxzhovtyj/card-validator/internal/service"
+	"github.com/maxzhovtyj/card-validator/pkg/card"
 	"github.com/maxzhovtyj/card-validator/pkg/log/applogger"
 	"google.golang.org/grpc"
 	"net"
@@ -34,8 +35,11 @@ func Run() {
 		logger.Fatal(err)
 	}
 
+	logger.Infof("init card validator")
+	validator := card.NewValidator()
+
 	logger.Infof("init services")
-	s := service.New()
+	s := service.New(validator)
 
 	logger.Infof("init grpc server")
 	srv := grpc.NewServer()

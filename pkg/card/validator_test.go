@@ -10,16 +10,16 @@ var _ Card = (*card)(nil)
 type card struct {
 	number          string
 	expirationMonth time.Month
-	expirationYear  int
+	expirationYear  int64
 }
 
 func (c *card) GetNumber() string {
 	return c.number
 }
-func (c *card) GetExpirationMonth() time.Month {
-	return c.expirationMonth
+func (c *card) GetExpirationMonth() string {
+	return c.expirationMonth.String()
 }
-func (c *card) GetExpirationYear() int {
+func (c *card) GetExpirationYear() int64 {
 	return c.expirationYear
 }
 
@@ -28,7 +28,7 @@ func TestValid(t *testing.T) {
 		name            string
 		number          string
 		expirationMonth time.Month
-		expirationYear  int
+		expirationYear  int64
 		valid           bool
 	}{
 		{"valid", "4111111111111111", time.December, 2028, true},

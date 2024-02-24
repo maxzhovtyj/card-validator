@@ -5,10 +5,14 @@ service CardService {
   rpc Validate(ValidateCardRequest) returns (ValidateCardResponse);
 }
 
-message ValidateCardRequest {
+message Card {
   string number = 1;
   int64 expirationYear = 2;
   string expirationMonth = 3;
+}
+
+message ValidateCardRequest {
+  Card card = 1;
 }
 
 message Error {

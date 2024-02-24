@@ -14,8 +14,8 @@ var (
 
 type Card interface {
 	GetNumber() string
-	GetExpirationMonth() time.Month
-	GetExpirationYear() int
+	GetExpirationMonth() string
+	GetExpirationYear() int64
 }
 
 type Validator interface {
@@ -29,18 +29,34 @@ func NewValidator() Validator {
 	return &validator{}
 }
 
+var cardMonth = map[string]time.Month{
+	"01": time.January,
+	"02": time.February,
+	"03": time.March,
+	"04": time.April,
+	"05": time.May,
+	"06": time.June,
+	"07": time.July,
+	"08": time.August,
+	"09": time.September,
+	"10": time.October,
+	"11": time.November,
+	"12": time.December,
+}
+
 func (v *validator) Valid(card Card) error {
 	currTime := time.Now()
 	currTime.Month()
 
-	if card.GetExpirationYear() < currTime.Year() {
-		return ErrCardExpired
-	} else if card.GetExpirationYear() == currTime.Year() && card.GetExpirationMonth() > currTime.Month() {
-		return ErrCardExpired
+	month, ok := cardMonth[card.GetExpirationMonth()]
+	if !ok {
+		return ErrInvalidExpirationMonth
 	}
 
-	if card.GetExpirationMonth() > time.December || card.GetExpirationMonth() < time.January {
-		return ErrInvalidExpirationMonth
+	if card.GetExpirationYear() < int64(currTime.Year()) {
+		return ErrCardExpired
+	} else if card.GetExpirationYear() == int64(currTime.Year()) && month > currTime.Month() {
+		return ErrCardExpired
 	}
 
 	if len(card.GetNumber()) != 16 {
