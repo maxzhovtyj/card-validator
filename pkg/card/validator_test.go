@@ -5,6 +5,24 @@ import (
 	"time"
 )
 
+var _ Card = (*card)(nil)
+
+type card struct {
+	number          string
+	expirationMonth time.Month
+	expirationYear  int
+}
+
+func (c *card) GetNumber() string {
+	return c.number
+}
+func (c *card) GetExpirationMonth() time.Month {
+	return c.expirationMonth
+}
+func (c *card) GetExpirationYear() int {
+	return c.expirationYear
+}
+
 func TestValid(t *testing.T) {
 	testTable := []struct {
 		name            string
@@ -21,24 +39,15 @@ func TestValid(t *testing.T) {
 
 	for _, testCase := range testTable {
 		t.Run(testCase.name, func(t *testing.T) {
-			c := New()
-			c.SetNumber(testCase.number)
-			c.SetExpirationYear(testCase.expirationYear)
-			c.SetExpirationMonth(testCase.expirationMonth)
-
-			if c.Number() != testCase.number {
-				t.Errorf("card number: expected %s got %s", testCase.number, c.Number())
+			c := &card{
+				number:          testCase.number,
+				expirationMonth: testCase.expirationMonth,
+				expirationYear:  testCase.expirationYear,
 			}
 
-			if c.ExpirationMonth() != testCase.expirationMonth {
-				t.Errorf("expiration month: expected %s got %s", testCase.expirationMonth.String(), c.ExpirationMonth().String())
-			}
+			v := NewValidator()
 
-			if c.ExpirationYear() != testCase.expirationYear {
-				t.Errorf("expiration year: expected %d got %d", testCase.expirationYear, c.ExpirationYear())
-			}
-
-			err := Valid(c)
+			err := v.Valid(c)
 			if testCase.valid != (err == nil) {
 				t.Errorf("validation, expected %v got %v", testCase.valid, err)
 			}

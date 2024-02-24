@@ -12,25 +12,42 @@ var (
 	ErrCardExpired            = errors.New("card is expired")
 )
 
-func Valid(card Card) error {
+type Card interface {
+	GetNumber() string
+	GetExpirationMonth() time.Month
+	GetExpirationYear() int
+}
+
+type Validator interface {
+	Valid(card Card) error
+}
+
+type validator struct {
+}
+
+func NewValidator() Validator {
+	return &validator{}
+}
+
+func (v *validator) Valid(card Card) error {
 	currTime := time.Now()
 	currTime.Month()
 
-	if card.ExpirationYear() < currTime.Year() {
+	if card.GetExpirationYear() < currTime.Year() {
 		return ErrCardExpired
-	} else if card.ExpirationYear() == currTime.Year() && card.ExpirationMonth() > currTime.Month() {
+	} else if card.GetExpirationYear() == currTime.Year() && card.GetExpirationMonth() > currTime.Month() {
 		return ErrCardExpired
 	}
 
-	if card.ExpirationMonth() > time.December || card.ExpirationMonth() < time.January {
+	if card.GetExpirationMonth() > time.December || card.GetExpirationMonth() < time.January {
 		return ErrInvalidExpirationMonth
 	}
 
-	if len(card.Number()) != 16 {
+	if len(card.GetNumber()) != 16 {
 		return ErrInvalidCardNumber
 	}
 
-	for _, d := range card.Number() {
+	for _, d := range card.GetNumber() {
 		if !unicode.IsDigit(d) {
 			return ErrInvalidCardNumber
 		}
